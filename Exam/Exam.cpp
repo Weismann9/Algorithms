@@ -114,6 +114,18 @@ void shaker_sort(vector<Example*> &document){
 	
 }
 
+void insertion_sort(vector<Example*> &document){
+	for(int i=0; i < (int)document.size()-1; i++){
+		int j=i+1;
+		Example* tmp = document[j];
+		while(j > 0 && (document[j-1]->int_field > tmp->int_field)){
+			document[j] = document[j-1];
+			j--;
+		}
+		document[j] = tmp;
+	}
+}
+
 //Main function
 void process(vector<Example*> &database){
 	bool n=false;
@@ -122,7 +134,7 @@ void process(vector<Example*> &database){
 	cout<<"Working with documents database.";
 	cout<<"\nCurrent size: "<<(int)database.size();
 	cout<<"\nChoose action:";
-	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit | 4 - random fill | 5 - bubble sort | 6 - shaker sort\n";
+	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit | 4 - random fill | 5 - bubble sort | 6 - shaker sort | 7 - insertion sort\n";
 	char selector; cin>>selector;
 	switch(selector){
 		case '0':{
@@ -153,6 +165,11 @@ void process(vector<Example*> &database){
 				}
 		case '6':{
 			shaker_sort(database);
+			output(database);
+			break;
+				}
+		case '7':{
+			insertion_sort(database);
 			output(database);
 			break;
 				}
