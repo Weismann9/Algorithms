@@ -95,6 +95,24 @@ void bubble_sort(vector<Example*> &document){
 	}
 }
 
+void shaker_sort(vector<Example*> &document){
+	for(int i = 0; i < (int)document.size(); i++){
+
+		for(int j = 0 ; j < (int)document.size()-1-i; j++){
+			if(document[j]->int_field > document[j+1]->int_field){
+				swap(document[j],document[j+1]);
+			}
+		}
+
+		for(int k = (int)document.size()-1-i; k > i; k--){
+			if(document[k-1]->int_field > document[k]->int_field){
+				swap(document[k],document[k-1]);
+			}
+		}
+
+	}
+	
+}
 
 //Main function
 void process(vector<Example*> &database){
@@ -104,7 +122,7 @@ void process(vector<Example*> &database){
 	cout<<"Working with documents database.";
 	cout<<"\nCurrent size: "<<(int)database.size();
 	cout<<"\nChoose action:";
-	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit | 4 - bubble sort\n";
+	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit | 4 - random fill | 5 - bubble sort | 6 - shaker sort\n";
 	char selector; cin>>selector;
 	switch(selector){
 		case '0':{
@@ -125,6 +143,16 @@ void process(vector<Example*> &database){
 			   }
 		case '4':{
 			bubble_sort(database);
+			output(database);
+			break;
+				}
+		case '5':{
+			bubble_sort(database);
+			output(database);
+			break;
+				}
+		case '6':{
+			shaker_sort(database);
 			output(database);
 			break;
 				}
