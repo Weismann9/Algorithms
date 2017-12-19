@@ -80,6 +80,23 @@ void output(vector<Example*> &document){
 	}
 }
 
+
+//Algorithms
+//bool compare(){
+//	return 
+//}
+void bubble_sort(vector<Example*> &document){
+	for(int i = 0; i < (int)document.size(); i++){
+		for(int j = 0 ; j < (int)document.size()-1; j++){
+			if(document[j]->int_field > document[j+1]->int_field){
+				swap(document[j],document[j+1]);
+			}
+		}
+	}
+}
+
+
+//Main function
 void process(vector<Example*> &database){
 	bool n=false;
 	while(!n){
@@ -87,7 +104,7 @@ void process(vector<Example*> &database){
 	cout<<"Working with documents database.";
 	cout<<"\nCurrent size: "<<(int)database.size();
 	cout<<"\nChoose action:";
-	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit\n";
+	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit | 4 - bubble sort\n";
 	char selector; cin>>selector;
 	switch(selector){
 		case '0':{
@@ -106,6 +123,11 @@ void process(vector<Example*> &database){
 			n=true;
 			break;
 			   }
+		case '4':{
+			bubble_sort(database);
+			output(database);
+			break;
+				}
 		default: break;
 	}
 
