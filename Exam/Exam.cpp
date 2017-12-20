@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <math.h>
 using namespace std;
 
 class Example{
@@ -125,6 +126,148 @@ void insertion_sort(vector<Example*> &document){
 		document[j] = tmp;
 	}
 }
+//
+//void shell_sort(vector<Example*> &document){
+//	int s;
+//	int *step = new int ((int)document.size());
+//	for(int s = 0; s <= (int)document.size()/3; s++){
+//		if(s % 2 == 0){
+//			step[s] = 9 * pow(2,s) - 9 * pow(2,s/2) + 1;
+//		}else{
+//			step[s] = 8 * pow(2,s) - 6 * pow(2,(s+1)/2) + 1;
+//		}
+//	}
+//	s = (int)document.size()/3;
+//	while(step[s]>0){
+//	
+//	}
+//	for(int i=0; i < (int)document.size() - step[s]; i++){
+//		int j = i + 1;
+//		Example* tmp = document[j];
+//		while(j >= step[s] && document[j-step[s]]->int_field > tmp->int_field){
+//			int j = 
+//		}
+//	}
+//}
+	//private: List<Provider^>^ shellSort(List<Provider^>^ list){
+	//	int s;
+	//	int *step = new int (list->Count/3);
+	//	for (s = 0; s <= list->Count / 3; s++) {
+	//		if (s % 2 == 0) {
+	//			step[s] = 9 * pow(2, s) - 9 * pow(2, s / 2) + 1;
+	//		}
+	//		else {
+	//			step[s] = 8 * pow(2, s) - 6 * pow(2, (s + 1) / 2) + 1;
+	//		}
+	//	}
+	//	s = list->Count / 3;
+	//	while (step[s] > 0) {
+	//		for (int i = 0; i < list->Count - step[s]; i++) {
+	//			int j = i + step[s];
+	//			Provider^ tmp = list[j];
+	//			while (j >= step[s] && compare(list[j - step[s]], tmp)) {
+	//				list[j] = list[j - step[s]];
+	//				j -= step[s];
+	//			}
+	//			list[j] = tmp;
+	//		}
+	//		s--;
+	//	}
+	//	return list;
+	//}
+
+vector<Example*> quick_sort(vector<Example*> &document, int left, int right){
+	if(left < right){
+		int boundary = left;
+		for(int i = left + 1; i < right; i++){
+			if(document[left]->int_field > document[i]->int_field){
+				swap(document[i],document[++boundary]);
+			}
+		}
+		swap(document[left],document[boundary]);
+		quick_sort(document,left,boundary);
+		quick_sort(document,boundary+1,right);
+	}
+	return document;
+}
+
+int get_max(vector<Example*> &document){
+	int max = document[0]->int_field;
+	for(int i = 0; i < (int)document.size(); i++){
+		if(document[i]->int_field > max){
+			max = document[i]->int_field;
+		}
+	}
+	return max;
+}
+
+int **initArr(int row, int column) {
+	int **arr = new int*[row];
+	for (int i = 0; i < row; i++){
+		arr[i] = new int[column];
+	}
+	
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < column; j++) {
+			arr[i][j] = 0;
+		}
+	}
+	return arr;
+}
+
+vector<Example*> count_sort(vector<Example*> &document, int exp){
+	int **arr = initArr(10, (int)document.size());
+
+	for (int i = 0; i < (int)document.size(); i++) {
+		arr[(document[i]->int_field / exp) % 10][i] = document[i]->int_field;
+	}
+
+	for (int i = 0, k = 0; i < 10; i++) {
+		for (int j = 0; j < (int)document.size(); j++) {
+			if (arr[i][j]) {
+				document[k]->int_field = arr[i][j];
+				k++;
+			}
+		}
+	}
+	return document;
+}
+
+void radix_sort(vector<Example*> &document){
+	int max = get_max(document);
+	for(int exp = 1; max / exp > 0; exp *= 10){
+		document = count_sort(document,exp);
+	}
+}
+
+void binary_search(vector<Example*> &document, int pLeft, int pRight, int sEl){
+	int el = (pLeft + pRight) / 2;
+	if (document[el]->int_field == sEl){ 
+		cout << "Record: " << document[el]->str_field << " " <<  document[el]->int_field << " " << document[el]->double_field << "\n";
+		if (el-1 >= 0 && el+1 <= (int)document.size()-1){
+			for (int i = el - 1; document[el]->int_field == document[i]->int_field; i--) {
+				cout << "Record: " << document[i]->str_field << " " <<  document[i]->int_field << " " << document[i]->double_field << "\n";
+			}
+
+			for (int j = el + 1; document[el]->int_field == document[j]->int_field; j++) {
+				cout << "Record: " << document[j]->str_field << " " <<  document[j]->int_field << " " << document[j]->double_field << "\n";
+			}
+		}
+	}else {
+		if (pLeft == pRight){
+			cout << "Record not found\n";
+			return;
+		}
+	}
+
+	if (document[el]->int_field > sEl) {
+		binary_search(document, pLeft, el - 1, sEl);
+	}
+
+	if (document[el]->int_field  < sEl) {
+		binary_search(document, el + 1, pRight, sEl);
+	}
+}
 
 //Main function
 void process(vector<Example*> &database){
@@ -134,7 +277,7 @@ void process(vector<Example*> &database){
 	cout<<"Working with documents database.";
 	cout<<"\nCurrent size: "<<(int)database.size();
 	cout<<"\nChoose action:";
-	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit | 4 - random fill | 5 - bubble sort | 6 - shaker sort | 7 - insertion sort\n";
+	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit | 4 - random fill | 5 - bubble sort | 6 - shaker sort | 7 - insertion sort | 8 - Shell sort | 9 - quick(hyarem) sort | A - radix sort | B - binary search\n";
 	char selector; cin>>selector;
 	switch(selector){
 		case '0':{
@@ -171,6 +314,29 @@ void process(vector<Example*> &database){
 		case '7':{
 			insertion_sort(database);
 			output(database);
+			break;
+				}
+		case '8':{
+			cout<<"something went wrong :(\n";
+			//shell_sort(database);
+			output(database);
+			break;
+				}
+		case '9':{
+			database = quick_sort(database, 0 ,(int)database.size());
+			output(database);
+			break;
+				}
+		case 'A':{
+			radix_sort(database);
+			output(database);
+			break;
+				}
+		case 'B':{
+			int search_el;
+			cout << "Enter seraching element: "; cin >> search_el;
+			binary_search(database, 0 , (int)database.size()-1, search_el);
+			system("pause");
 			break;
 				}
 		default: break;

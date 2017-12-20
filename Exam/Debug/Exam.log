@@ -1,4 +1,4 @@
-﻿Build started 19.12.2017 22:20:20.
+﻿Build started 20.12.2017 16:07:56.
      1>Project "D:\3 курс\Екзамени (1 семестр)\Алгоритми\Exam\Exam\Exam.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Exam.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -25,4 +25,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.87
+Time Elapsed 00:00:00.62
