@@ -126,70 +126,76 @@ void insertion_sort(vector<Example*> &document){
 		document[j] = tmp;
 	}
 }
-//
-//void shell_sort(vector<Example*> &document){
-//	int s;
-//	int *step = new int ((int)document.size());
-//	for(int s = 0; s <= (int)document.size()/3; s++){
-//		if(s % 2 == 0){
-//			step[s] = 9 * pow(2,s) - 9 * pow(2,s/2) + 1;
-//		}else{
-//			step[s] = 8 * pow(2,s) - 6 * pow(2,(s+1)/2) + 1;
-//		}
-//	}
-//	s = (int)document.size()/3;
-//	while(step[s]>0){
-//	
-//	}
-//	for(int i=0; i < (int)document.size() - step[s]; i++){
-//		int j = i + 1;
-//		Example* tmp = document[j];
-//		while(j >= step[s] && document[j-step[s]]->int_field > tmp->int_field){
-//			int j = 
-//		}
-//	}
-//}
-	//private: List<Provider^>^ shellSort(List<Provider^>^ list){
-	//	int s;
-	//	int *step = new int (list->Count/3);
-	//	for (s = 0; s <= list->Count / 3; s++) {
-	//		if (s % 2 == 0) {
-	//			step[s] = 9 * pow(2, s) - 9 * pow(2, s / 2) + 1;
-	//		}
-	//		else {
-	//			step[s] = 8 * pow(2, s) - 6 * pow(2, (s + 1) / 2) + 1;
-	//		}
-	//	}
-	//	s = list->Count / 3;
-	//	while (step[s] > 0) {
-	//		for (int i = 0; i < list->Count - step[s]; i++) {
-	//			int j = i + step[s];
-	//			Provider^ tmp = list[j];
-	//			while (j >= step[s] && compare(list[j - step[s]], tmp)) {
-	//				list[j] = list[j - step[s]];
-	//				j -= step[s];
-	//			}
-	//			list[j] = tmp;
-	//		}
-	//		s--;
-	//	}
-	//	return list;
-	//}
 
-vector<Example*> quick_sort(vector<Example*> &document, int left, int right){
-	if(left < right){
-		int boundary = left;
-		for(int i = left + 1; i < right; i++){
-			if(document[left]->int_field > document[i]->int_field){
-				swap(document[i],document[++boundary]);
+void shell_sort(vector<Example*> &document){
+	int step = (int)document.size() / 2;
+	while(step > 0){
+		for (int i = 0; i < (int)document.size() - step; i++) {
+			int j = i + step;
+			Example* tmp = document[j];
+			while (j >= step && (document[j-step]->int_field > tmp->int_field) ) {
+				document[j] = document[j - step];
+				j -= step;
 			}
+			document[j] = tmp;
 		}
-		swap(document[left],document[boundary]);
-		quick_sort(document,left,boundary);
-		quick_sort(document,boundary+1,right);
+        if (step == 2) {
+            step = 1;
+        } else {
+			step = (int)(step/2.2);
+        }
 	}
-	return document;
 }
+
+ void quick_sort(vector<Example*> &document, int left, int right){
+	int iter=left, jter=right;
+	int t = (iter + jter) / 2;
+	Example* temp = document[t];
+	while (document[iter]->int_field < temp->int_field)iter++;
+	while (document[jter]->int_field > temp->int_field)jter--;
+	if (jter >= iter) {
+		swap(document[iter], document[jter]);
+		iter++;
+		jter--;
+	}
+	if (left < jter)quick_sort(document, left,jter);
+	if (right > iter)quick_sort(document, iter, right);
+}
+ 
+void repairTop(vector<Example*> &document, int n, int i) {
+	int largest = i;
+	int l = 2 * i + 1;
+	int r = 2 * i + 2;
+
+	// If left child is larger than root
+	if (l < n && document[l]->int_field > document[largest]->int_field)
+		largest = l;
+
+	// If right child is larger than largest so far
+	if (r < n && document[r]->int_field > document[largest]->int_field)
+		largest = r;
+
+	// If largest is not root
+	if (largest != i)
+	{
+		swap(document[i], document[largest]);
+
+		// Recursively heapify the affected sub-tree
+		repairTop(document, n, largest);
+	}
+}
+
+void heap_sort(vector<Example*> &document) {
+	for (int i = (int)document.size() / 2 - 1; i >= 0; i--) {
+		repairTop(document, (int)document.size() - 1, i);
+	}
+	for (int i = (int)document.size() - 1; i >= 0; i--) {
+		swap(document[0], document[i]);
+		repairTop(document, i, 0);
+	}
+}
+
+
 
 int get_max(vector<Example*> &document){
 	int max = document[0]->int_field;
@@ -277,7 +283,7 @@ void process(vector<Example*> &database){
 	cout<<"Working with documents database.";
 	cout<<"\nCurrent size: "<<(int)database.size();
 	cout<<"\nChoose action:";
-	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit | 4 - random fill | 5 - bubble sort | 6 - shaker sort | 7 - insertion sort | 8 - Shell sort | 9 - quick(hyarem) sort | A - radix sort | B - binary search\n";
+	cout<<"\n0 - show | 1 - add | 2 - remove | 3 - quit | 4 - random fill | 5 - bubble sort | 6 - shaker sort | 7 - insertion sort | 8 - Shell sort | 9 - quick(hyarem) sort | A - radix sort | B - binary search | C - heap sort\n";
 	char selector; cin>>selector;
 	switch(selector){
 		case '0':{
@@ -317,13 +323,12 @@ void process(vector<Example*> &database){
 			break;
 				}
 		case '8':{
-			cout<<"something went wrong :(\n";
-			//shell_sort(database);
+			shell_sort(database);
 			output(database);
 			break;
 				}
 		case '9':{
-			database = quick_sort(database, 0 ,(int)database.size());
+			quick_sort(database, 0 ,(int)database.size()-1);
 			output(database);
 			break;
 				}
@@ -337,6 +342,11 @@ void process(vector<Example*> &database){
 			cout << "Enter seraching element: "; cin >> search_el;
 			binary_search(database, 0 , (int)database.size()-1, search_el);
 			system("pause");
+			break;
+				}
+		case 'C':{
+			heap_sort(database);
+			output(database);
 			break;
 				}
 		default: break;
