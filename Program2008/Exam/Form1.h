@@ -9,7 +9,6 @@ namespace Exam {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-
 	/// <summary>
 	/// Summary for Form1
 	///
@@ -59,6 +58,7 @@ namespace Exam {
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Button^  button3;
+	private: System::Windows::Forms::ComboBox^  comboBox1;
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -96,6 +96,7 @@ namespace Exam {
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->bindingSource1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->bindingNavigator1))->BeginInit();
@@ -112,7 +113,7 @@ namespace Exam {
 			this->dataGridView1->Location = System::Drawing::Point(14, 28);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->RowHeadersVisible = false;
-			this->dataGridView1->Size = System::Drawing::Size(240, 150);
+			this->dataGridView1->Size = System::Drawing::Size(208, 150);
 			this->dataGridView1->TabIndex = 0;
 			// 
 			// Column1
@@ -142,7 +143,7 @@ namespace Exam {
 			this->bindingNavigator1->MovePreviousItem = this->bindingNavigatorMovePreviousItem;
 			this->bindingNavigator1->Name = L"bindingNavigator1";
 			this->bindingNavigator1->PositionItem = this->bindingNavigatorPositionItem;
-			this->bindingNavigator1->Size = System::Drawing::Size(266, 25);
+			this->bindingNavigator1->Size = System::Drawing::Size(356, 25);
 			this->bindingNavigator1->TabIndex = 1;
 			this->bindingNavigator1->Text = L"bindingNavigator1";
 			// 
@@ -233,9 +234,9 @@ namespace Exam {
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(14, 184);
+			this->button1->Location = System::Drawing::Point(228, 110);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->Size = System::Drawing::Size(121, 23);
 			this->button1->TabIndex = 2;
 			this->button1->Text = L"Сортувати";
 			this->button1->UseVisualStyleBackColor = true;
@@ -243,16 +244,16 @@ namespace Exam {
 			// 
 			// textBox1
 			// 
-			this->textBox1->Location = System::Drawing::Point(154, 184);
+			this->textBox1->Location = System::Drawing::Point(228, 27);
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(100, 20);
+			this->textBox1->Size = System::Drawing::Size(121, 20);
 			this->textBox1->TabIndex = 3;
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(154, 210);
+			this->button2->Location = System::Drawing::Point(228, 54);
 			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(100, 23);
+			this->button2->Size = System::Drawing::Size(121, 23);
 			this->button2->TabIndex = 4;
 			this->button2->Text = L"Додати";
 			this->button2->UseVisualStyleBackColor = true;
@@ -260,19 +261,29 @@ namespace Exam {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(14, 210);
+			this->button3->Location = System::Drawing::Point(228, 154);
 			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(75, 23);
+			this->button3->Size = System::Drawing::Size(121, 23);
 			this->button3->TabIndex = 5;
 			this->button3->Text = L"Очистити";
 			this->button3->UseVisualStyleBackColor = true;
 			this->button3->Click += gcnew System::EventHandler(this, &Form1::button3_Click);
 			// 
+			// comboBox1
+			// 
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"str field ", L"int field"});
+			this->comboBox1->Location = System::Drawing::Point(228, 83);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(121, 21);
+			this->comboBox1->TabIndex = 6;
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(266, 238);
+			this->ClientSize = System::Drawing::Size(356, 187);
+			this->Controls->Add(this->comboBox1);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->textBox1);
@@ -301,12 +312,20 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 	bindingNavigator1->BindingSource = bindingSource1;
 }
 
+private: bool compare(Example^ p1, Example^ p2)
+{
+	switch (comboBox1->SelectedIndex)
+	{
+	case 1:
+		return p1->int_field > p2->int_field;
+	}
+	return false;
+}
+
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 	for(int i = 0; i < database->Count; i++){
-		for(int j = 0 ; j < database->Count-1; j++){
-			int el = database[j]->int_field;
-			if(database[j]->int_field > database[j+1]->int_field){
-				//swap(database[j],database[j+1]);
+		for(int j = 0; j < database->Count - 1; j++){
+			if(compare(database[j],database[j+1])){
 				Example^ tmp = database[j];
 				database[j] = database[j+1];
 				database[j+1] = tmp;
